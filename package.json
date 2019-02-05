@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/JoeScholz/liri-node-app/issues"
   },
-  "homepage": "https://github.com/JoeScholz/liri-node-app#readme"
+  "homepage": "https://github.com/JoeScholz/liri-node-app#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
 }
