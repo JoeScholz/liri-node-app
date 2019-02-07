@@ -1,35 +1,50 @@
+
 require("dotenv").config();
 
 var keys = require("./keys.js");
 
-// Grab the axios package...
-var axios = require("axios");
+var fs = require("fs");
 
-// Run the axios.get function...
-// The axios.get function takes in a URL and returns a promise (just like $.ajax)
-axios
-  .get("https://en.wikipedia.org/wiki/Kudos_(granola_bar)")
-  .then(function(response) {
-    // If the axios was successful...
-    // Then log the body from the site!
-    console.log(response.data);
-  })
-  .catch(function(error) {
-    if (error.response) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
-      console.log(error.response.data);
-      console.log(error.response.status);
-      console.log(error.response.headers);
-    } else if (error.request) {
-      // The request was made but no response was received
-      // `error.request` is an object that comes back with details pertaining to the error that occurred.
-      console.log(error.request);
-    } else {
-      // Something happened in setting up the request that triggered an Error
-      console.log("Error", error.message);
+var Spotify = require("node-spotify-api");
+
+var spotify = new Spotify (keys.spotify);
+
+var searchType = process.argv[2];
+
+var song = process.argv.slice(3).join(" ");
+
+function searchSpotify(songName){
+  spotify.search({ type: 'track', query: songName }, function(err, data) {
+    if (err) {
+      return console.log('Error occurred: ' + err);
     }
-    console.log(error.config);
-  });
-
   
+    var songArr = data.tracks.items
+   
+   for(var i = 0; i < songArr.length; i++){
+     console.log(songArr[i].album.artists[0].name);
+     console.log(songArr[i].name);
+     console.log(songArr[i].preview_url);
+     console.log(songArr[i].album.name);
+     console.log("----------");
+   }
+  
+  // reference to artist name: data.tracks.items[0].album.artists[0].name
+  // reference to song name: data.tracks.items[0].name
+  // preview URL: data.tracks.items[0].preview_url
+  // album name: data.tracks.items[0].album.name
+  });
+}
+
+function chooseSearch(searchType, searchTerm){
+  switch(searchType){
+    case "spotify-this-song": 
+      searchSpotify(searchTerm);
+      break;
+    
+    default: 
+      console.log("Could not understand search.")
+  }
+}
+
+chooseSearch(searchType, song);
