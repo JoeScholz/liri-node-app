@@ -1,0 +1,25 @@
+function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Liri log is updated.")
+                }
+            }function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Liri log is updated.")
+                }
+            }function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Liri log is updated.")
+                }
+            }function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Liri log is updated.")
+                }
+            }
