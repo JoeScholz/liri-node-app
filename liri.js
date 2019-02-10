@@ -1,9 +1,10 @@
 
 require("dotenv").config();
 var keys = require("./keys.js");
-var fs = require("fs");
 var axios = require("axios");
 var Spotify = require("node-spotify-api");
+var fs = require("fs");
+var moment = require("moment");
 // var request = require("request");
 
 
@@ -34,18 +35,16 @@ switch(searchType){
 
   function searchBands(searchName) {
 
-    // if (!searchName) {
-    //   searchName = "mr nobody";
-    // }
-
-    var bandSearch = "https://rest.bandsintown.com/artists/" + searchName + "/events?app_id=codingbootcamp";
-    axios.get(bandSearch).then(
+    var queryURL = "https://rest.bandsintown.com/artists/" + searchName + "/events?app_id=codingbootcamp";
+    axios.get(queryURL).then(
         function (response) {
           
-          var call = response.data[0];
+          var data = response.data[0];
 
-          console.log('here',call.venue);
-        
+          console.log(data.venue.name);
+          console.log(data.venue.city);
+          console.log(moment(data.datetime).format("MM/DD/YYYY"));
+
         });
 
       }
@@ -86,8 +85,8 @@ function searchOmdb(searchName) {
       searchName = "mr nobody";
     }
 
-    var movieSearch = "http://www.omdbapi.com/?t=" + searchName + "&y=&plot=short&apikey=trilogy";
-    axios.get(movieSearch).then(
+    var queryURL = "http://www.omdbapi.com/?t=" + searchName + "&y=&plot=short&apikey=trilogy";
+    axios.get(queryURL).then(
         function (response) {
             console.log("--------------------");
             console.log("Movie Name: " + response.data.Title);
@@ -111,6 +110,8 @@ function searchOmdb(searchName) {
         console.log("Error")
     });
   }
+
+  // REQUEST VERSION FOR FUTURE REFERENCE:
   // request('http://www.omdbapi.com/?apiKey=e37064bb' + '&t='+ searchName, 
   //   function(err, response, body) {
       
