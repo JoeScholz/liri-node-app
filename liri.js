@@ -7,8 +7,6 @@ var fs = require("fs");
 var moment = require("moment");
 // var request = require("request");
 
-
-
 var spotify = new Spotify (keys.spotify);
 
 var searchType = process.argv[2];
@@ -17,19 +15,19 @@ var searchName = process.argv.slice(3).join(" ");
 
 
 switch(searchType){
-  case "concert-this":
+  case "concert":
     searchBands(searchName);
     break;
-  case "spotify-this-song":
+  case "spotify":
     searchSpotify(searchName);
     break;
-  case "movie-this":
+  case "movie":
     searchOmdb(searchName);
     break;
-  
-  
-    
-    default: 
+  case "doIt":
+    doWhatItSays();
+    break;
+  default: 
       console.log("Could not understand search.")
   }
 
@@ -41,12 +39,18 @@ switch(searchType){
           
           var data = response.data[0];
 
+          console.log("--------------------");
+          console.log(searchName);
           console.log(data.venue.name);
-          console.log(data.venue.city);
+          console.log(data.venue.city + ", " + data.venue.region);
+          console.log(data.venue.country);
           console.log(moment(data.datetime).format("MM/DD/YYYY"));
+          // console.log(response.data);
+          console.log("--------------------");
 
-        });
-
+        }).catch(function (err) {
+          console.log("Error: " + err)
+      })
       }
 
 function searchSpotify(searchName){
@@ -65,7 +69,7 @@ function searchSpotify(searchName){
        console.log(songArr[i].name);
        console.log(songArr[i].preview_url);
        console.log(songArr[i].album.name);
-       console.log("----------");
+       console.log("--------------------");
      }
     }else{
       console.log("There is an error: " + err.toString())
@@ -106,9 +110,9 @@ function searchOmdb(searchName) {
             //     }
             // })
         }
-    ).catch(function (error) {
-        console.log("Error")
-    });
+    ).catch(function (err) {
+      console.log("Error: " + err)
+  })
   }
 
   // REQUEST VERSION FOR FUTURE REFERENCE:
@@ -132,3 +136,20 @@ function searchOmdb(searchName) {
 //       }
 //   );
 // } 
+
+function doWhatItSays() {
+  fs.readFile("random.txt", "utf8", function (error, data) {
+      if (!error) {
+        var dataArr = data.split(",");
+        if (dataArr[0] === 'concert') {
+          searchBands(dataArr[1]);
+        }else if (dataArr[0] === 'spotify') {
+          searchSpotify(dataArr[1]);
+        }else if (dataArr[0] === 'movie') {
+          searchOmdb(dataArr[1]);
+        }else {
+          console.log("An error occurred: " + error);
+        }
+      }
+  });
+}
