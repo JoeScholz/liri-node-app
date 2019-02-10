@@ -4,7 +4,7 @@ var keys = require("./keys.js");
 var fs = require("fs");
 var axios = require("axios");
 var Spotify = require("node-spotify-api");
-var request = require("request");
+// var request = require("request");
 
 
 
@@ -16,37 +16,62 @@ var searchName = process.argv.slice(3).join(" ");
 
 
 switch(searchType){
+  case "concert-this":
+    searchBands(searchName);
+    break;
   case "spotify-this-song":
     searchSpotify(searchName);
     break;
   case "movie-this":
     searchOmdb(searchName);
     break;
-
-    
+  
+  
     
     default: 
       console.log("Could not understand search.")
   }
 
+  function searchBands(searchName) {
+
+    // if (!searchName) {
+    //   searchName = "mr nobody";
+    // }
+
+    var bandSearch = "https://rest.bandsintown.com/artists/" + searchName + "/events?app_id=codingbootcamp";
+    axios.get(bandSearch).then(
+        function (response) {
+          
+          var call = response.data[0];
+
+          console.log('here',call.venue);
+        
+        });
+
+      }
 
 function searchSpotify(searchName){
   if (!searchName) {
     searchName = "the sign ace of base";
   };
   
-  spotify.search({ type: 'track', query: searchName }, function(err, data) {
-    // console.log error???
+
+  spotify.search({ type: 'track', query: searchName, limit: 10 }, function(err, data) {
     
-    var songArr = data.tracks.items
-   
-   for(var i = 0; i < songArr.length; i++){
-     console.log(songArr[i].album.artists[0].name);
-     console.log(songArr[i].name);
-     console.log(songArr[i].preview_url);
-     console.log(songArr[i].album.name);
-     console.log("----------");
-   }
+    if(!err){
+      var songArr = data.tracks.items
+ 
+     for(var i = 0; i < songArr.length; i++){
+       console.log(songArr[i].album.artists[0].name);
+       console.log(songArr[i].name);
+       console.log(songArr[i].preview_url);
+       console.log(songArr[i].album.name);
+       console.log("----------");
+     }
+    }else{
+      console.log("There is an error: " + err.toString())
+    }
+    
   
   // reference to artist name: data.tracks.items[0].album.artists[0].name
   // reference to song name: data.tracks.items[0].name
