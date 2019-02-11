@@ -23,12 +23,14 @@ For searching movies on **OMDb:**
 Liri incorprates Node.js, JavaScript, axios and moment.
 
 ## Concert search details:
-
-
+![bands image](Images/bandsCode.PNG?raw=true)
+![bands image](Images/bandsNode.PNG?raw=true)
 ## Spotify details:
-
+![spotify image](Images/spotifyCode.PNG?raw=true)
+![spotify image](Images/spotifyNode.PNG?raw=true)
 ## OMDb details:
-
+![movie image](Images/movieCode.PNG?raw=true)
+![movie image](Images/movieNode.PNG?raw=true)
 ## Additional functionality:
 doIt and log.txt
 
