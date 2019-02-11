@@ -6,20 +6,28 @@ The liri app will allow a user to search three different entertainment apps usin
 
 To use, open liri.js in terminal using the node syntax:
   node liri.js
-For searching movies on **OMDb**:
+    
+For searching **Bands in Town:**
 
-    node liri.js movie <movie title>
+    node liri.js concert <band name>
   
-For searching songs or atists on Spotify:
+For searching songs or atists on **Spotify:**
 
     node liri.js spotify <song or atist name>
     
-For searching Bands in Town:
+For searching movies on **OMDb:**
 
-    node liri.js concert <band name>
+    node liri.js movie <movie title>   
     
 ## Code language and extensions:
 Liri incorprates Node.js, JavaScript, axios and moment.
+
+## Concert search details:
+
+
+## Spotify details:
+
+## OMDb details:
 
 ## Additional functionality:
 doIt and log.txt
