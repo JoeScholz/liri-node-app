@@ -10,11 +10,11 @@ var moment = require("moment");
 var spotify = new Spotify (keys.spotify);
 
 var searchType = process.argv[2];
-
 var searchName = process.argv.slice(3).join(" ");
 
 
 switch(searchType){
+
   case "concert":
     searchBands(searchName);
     break;
@@ -31,51 +31,75 @@ switch(searchType){
       console.log("Could not understand search.")
   }
 
-  function searchBands(searchName) {
+function searchBands(searchName) {
 
-    var queryURL = "https://rest.bandsintown.com/artists/" + searchName + "/events?app_id=codingbootcamp";
-    axios.get(queryURL).then(
-        function (response) {
+  var queryURL = "https://rest.bandsintown.com/artists/" + searchName + "/events?app_id=codingbootcamp";
+    
+  axios.get(queryURL).then(
+      function (response){
           
-          var data = response.data[0];
+        var data = response.data[0];
 
-          console.log("--------------------");
-          console.log(searchName);
-          console.log(data.venue.name);
-          console.log(data.venue.city + ", " + data.venue.region);
-          console.log(data.venue.country);
-          console.log(moment(data.datetime).format("MM/DD/YYYY"));
+        console.log("--------------------" +
+        "\n" + searchName +
+        "\n" + data.venue.name +
+        "\n" + data.venue.city + ", " + data.venue.region +
+        "\n" + data.venue.country + 
+        "\n" + moment(data.datetime).format("MM/DD/YYYY") +
           // console.log(response.data);
-          console.log("--------------------");
+        "\n" + "--------------------");
 
-        }).catch(function (err) {
-          console.log("Error: " + err)
-      })
-      }
+        fs.appendFile("./log.txt", "--------------------" + 
+        "\n" + searchName +
+        "\n" + data.venue.name +
+        "\n" + data.venue.city + ", " + data.venue.region +
+        "\n" + data.venue.country + 
+        "\n" + moment(data.datetime).format("MM/DD/YYYY") +
+        "\n" + "--------------------" +
+        "\n" + error.response, function (err) {
+          if (err) {
+              console.log(err);
+          } else {
+              console.log("Liri log is updated.")
+          }
+        });
+  });
+}
 
 function searchSpotify(searchName){
-  if (!searchName) {
+  
+  if(!searchName){
     searchName = "the sign ace of base";
   };
   
-
-  spotify.search({ type: 'track', query: searchName, limit: 10 }, function(err, data) {
+  spotify.search({ type: 'track', query: searchName, limit: 5 }, function(err, data) {
     
     if(!err){
       var songArr = data.tracks.items
  
      for(var i = 0; i < songArr.length; i++){
-       console.log(songArr[i].album.artists[0].name);
-       console.log(songArr[i].name);
-       console.log(songArr[i].preview_url);
-       console.log(songArr[i].album.name);
-       console.log("--------------------");
-     }
-    }else{
-      console.log("There is an error: " + err.toString())
+      console.log(songArr[i].album.artists[0].name + 
+      "\n" + songArr[i].name + 
+      "\n" + songArr[i].preview_url + 
+      "\n" + songArr[i].album.name + 
+      "\n" + "--------------------");
+        
+
+      fs.appendFile("log.txt", "\n" + songArr[i].album.artists[0].name + 
+      "\n" + songArr[i].name + 
+      "\n" + songArr[i].preview_url + 
+      "\n" + songArr[i].album.name + 
+      "\n" + "--------------------", function(err){
+        if (err) {
+            console.log(err);
+        } else {
+            console.log("Liri log is updated.");
+        }
+      });
     }
-    
-  
+    }else{
+      console.log("There is an error: " + err.toString());
+    }
   // reference to artist name: data.tracks.items[0].album.artists[0].name
   // reference to song name: data.tracks.items[0].name
   // preview URL: data.tracks.items[0].preview_url
@@ -83,37 +107,47 @@ function searchSpotify(searchName){
   });
 }
 
-function searchOmdb(searchName) {
+function searchOmdb(searchName){
 
-    if (!searchName) {
+    if(!searchName){
       searchName = "mr nobody";
     }
 
     var queryURL = "http://www.omdbapi.com/?t=" + searchName + "&y=&plot=short&apikey=trilogy";
     axios.get(queryURL).then(
-        function (response) {
-            console.log("--------------------");
-            console.log("Movie Name: " + response.data.Title);
-            console.log("Release Year: " + response.data.Year);
-            console.log("IMDB Rating: " + response.data.imdbRating);
-            console.log("Rotten Tomatoes Rating: " + response.data.tomatoRating);
-            console.log("Production Country: " + response.data.Country);
-            console.log("Language: " + response.data.Language);
-            console.log("Plot: " + response.data.Plot);
-            console.log("Actors: " + response.data.Actors);
-            console.log("--------------------");
-            // fs.appendFile("./log.txt", function (err) {
-            //     if (err) {
-            //         console.log(err);
-            //     } else {
-            //         console.log("Liri log is updated.")
-            //     }
-            // })
+
+        function (response){
+
+            console.log("--------------------" +
+            "\nMovie Name: " + response.data.Title +
+            "\nRelease Year: " + response.data.Year +
+            "\nIMDB Rating: " + response.data.imdbRating +
+            "\nRotten Tomatoes Rating: " + response.data.tomatoRating +
+            "\nProduction Country: " + response.data.Country +
+            "\nLanguage: " + response.data.Language +
+            "\nPlot: " + response.data.Plot +
+            "\nActors: " + response.data.Actors +
+            "\n--------------------");
+
+            fs.appendFile("./log.txt", "--------------------" +
+            "\nMovie Name: " + response.data.Title +
+            "\nRelease Year: " + response.data.Year +
+            "\nIMDB Rating: " + response.data.imdbRating +
+            "\nRotten Tomatoes Rating: " + response.data.tomatoRating +
+            "\nProduction Country: " + response.data.Country +
+            "\nLanguage: " + response.data.Language +
+            "\nPlot: " + response.data.Plot +
+            "\nActors: " + response.data.Actors +
+            "\n--------------------", function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Liri log is updated.")
+                }
+            });
         }
-    ).catch(function (err) {
-      console.log("Error: " + err)
-  })
-  }
+    );
+}
 
   // REQUEST VERSION FOR FUTURE REFERENCE:
   // request('http://www.omdbapi.com/?apiKey=e37064bb' + '&t='+ searchName, 
@@ -137,17 +171,19 @@ function searchOmdb(searchName) {
 //   );
 // } 
 
-function doWhatItSays() {
-  fs.readFile("random.txt", "utf8", function (error, data) {
-      if (!error) {
+function doWhatItSays(){
+
+  fs.readFile("random.txt", "utf8", function (error, data){
+
+      if(!error){
         var dataArr = data.split(",");
-        if (dataArr[0] === 'concert') {
+        if (dataArr[0] === 'concert'){
           searchBands(dataArr[1]);
-        }else if (dataArr[0] === 'spotify') {
+        }else if (dataArr[0] === 'spotify'){
           searchSpotify(dataArr[1]);
-        }else if (dataArr[0] === 'movie') {
+        }else if (dataArr[0] === 'movie'){
           searchOmdb(dataArr[1]);
-        }else {
+        }else{
           console.log("An error occurred: " + error);
         }
       }
